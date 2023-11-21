@@ -1,0 +1,44 @@
+###################################
+
+# Prerequisites
+
+# Get version of RHEL
+source /etc/os-release
+if [ $(bc<<<"$VERSION_ID < 8") = 1 ]
+then majorver=7
+elif [ $(bc<<<"$VERSION_ID < 9") = 1 ]
+then majorver=8
+else majorver=9
+fi
+
+# Register the Microsoft RedHat repository
+curl -sSL -O https://packages.microsoft.com/config/rhel/$majorver/packages-microsoft-prod.rpm
+
+# Register the Microsoft repository keys
+rpm -i packages-microsoft-prod.rpm
+
+# Delete the repository keys after installing
+rm packages-microsoft-prod.rpm
+
+# RHEL 7.x uses yum and RHEL 8+ uses dnf
+if [ $(bc<<<"$majorver < 8") ]
+then
+    # Update package index files
+    yum update
+    # Install PowerShell
+    yum install powershell -y
+else
+    # Update package index files
+    dnf update
+    # Install PowerShell
+    dnf install powershell -y
+fi
+
+if grep -q "/Subsystem powershell /usr/bin/pwsh -sshs -nologo" /etc/ssh/sshd_config
+then
+    exit
+else
+    echo "Subsystem powershell /usr/bin/pwsh -sshs -nologo" | tee -a /etc/ssh/sshd_config > /dev/null
+fi
+
+systemctl restart sshd.service

@@ -38,7 +38,7 @@ if grep -q "/Subsystem powershell /usr/bin/pwsh -sshs -nologo" /etc/ssh/sshd_con
 then
     exit
 else
-    echo "Subsystem powershell /usr/bin/pwsh -sshs -nologo" | tee -a /etc/ssh/sshd_config > /dev/null
+    echo "Subsystem powershell /usr/bin/pwsh -sshs -nologo" | sudo tee -a /etc/ssh/sshd_config > /dev/null
 fi
 
 systemctl restart sshd.service

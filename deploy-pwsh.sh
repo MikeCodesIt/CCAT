@@ -1,5 +1,4 @@
 ###################################
-
 # Prerequisites
 
 # Get version of RHEL
@@ -15,7 +14,7 @@ fi
 curl -sSL -O https://packages.microsoft.com/config/rhel/$majorver/packages-microsoft-prod.rpm
 
 # Register the Microsoft repository keys
-rpm -i packages-microsoft-prod.rpm
+sudo rpm -i packages-microsoft-prod.rpm
 
 # Delete the repository keys after installing
 rm packages-microsoft-prod.rpm
@@ -24,15 +23,16 @@ rm packages-microsoft-prod.rpm
 if [ $(bc<<<"$majorver < 8") ]
 then
     # Update package index files
-    yum update
+    sudo yum update
     # Install PowerShell
-    yum install powershell -y
+    sudo yum install powershell -y
 else
     # Update package index files
-    dnf update
+    sudo dnf update
     # Install PowerShell
-    dnf install powershell -y
+    sudo dnf install powershell -y
 fi
+
 
 if grep -q "/Subsystem powershell /usr/bin/pwsh -sshs -nologo" /etc/ssh/sshd_config
 then

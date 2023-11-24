@@ -41,4 +41,4 @@ else
     echo "Subsystem powershell /usr/bin/pwsh -sshs -nologo" | sudo tee -a /etc/ssh/sshd_config > /dev/null
 fi
 
-systemctl restart sshd.service
+sudo systemctl restart sshd.service
